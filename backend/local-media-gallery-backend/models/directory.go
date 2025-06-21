@@ -7,11 +7,11 @@ import (
 
 type Directory struct {
 	Id   uint   `json:"-" gorm:"primarykey;autoIncrement"`
-	Name string `json:"name" gorm:"not null"`
+	Name string `json:"name" gorm:"not null;size:256;index:idx_member,priority:2"`
 	Path string `json:"-" gorm:"not null;unique;size:512"`
 	Url  string `json:"url" gorm:"not null;unique;size:512"`
 
-	ParentDirectoryId *uint      `json:"-"`
+	ParentDirectoryId *uint      `json:"-" gorm:"index:idx_member,priority:1"`
 	ParentDirectory   *Directory `json:"-" gorm:"foreignkey:ParentDirectoryId"`
 
 	ThumbnailId *uint      `json:"-"`
@@ -21,7 +21,9 @@ type Directory struct {
 func GetDirectoryByUrl(db *gorm.DB, url string) *Directory {
 	var parentDirectory Directory
 
-	db.Where("url = ?", url).First(&parentDirectory)
+	db.
+		Where("url = ?", url).
+		First(&parentDirectory)
 
 	return &parentDirectory
 }
@@ -33,7 +35,12 @@ func GetDirectoriesByParentDirId(db *gorm.DB, parentDirId *uint) ([]*Directory, 
 
 	var directories []*Directory
 
-	err := db.Model(&Directory{}).Where("parent_directory_id = ?", parentDirId).Preload("Thumbnail.Image").Find(&directories).Error
+	err := db.
+		Where("parent_directory_id = ?", parentDirId).
+		Order("name").
+		Preload("Thumbnail.Image").
+		Find(&directories).
+		Error
 	if err != nil {
 		return directories, err
 	}

@@ -77,10 +77,9 @@ func (t *Task) Execute() error {
 	// Populate directoriesMap with child directories, setting their ParentDirectoryId
 	for _, dirEntry := range subdirectoriesDirEntry {
 		name := dirEntry.Name()
-		baseName := GetFileBasename(&dirEntry)
 		fullPath := GetDirEntryFullPath(currentDirFullPath, &dirEntry)
 
-		directoriesMap[baseName] = &models.Directory{
+		directoriesMap[name] = &models.Directory{
 			Name:              name,
 			Path:              fullPath,
 			Url:               RemovePathPrefix(fullPath),

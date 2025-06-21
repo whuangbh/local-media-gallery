@@ -7,11 +7,11 @@ import (
 
 type Video struct {
 	Id   uint   `json:"-" gorm:"primarykey;autoIncrement"`
-	Name string `json:"name" gorm:"not null"`
+	Name string `json:"name" gorm:"not null;size:256;index:idx_member,priority:2"`
 	Path string `json:"-" gorm:"not null;unique;size:512"`
 	Url  string `json:"url" gorm:"not null:unique;size:512"`
 
-	DirectoryId uint      `json:"-"`
+	DirectoryId uint      `json:"-" gorm:"index:idx_member,priority:1"`
 	Directory   Directory `json:"-" gorm:"foreignkey:DirectoryId"`
 
 	ThumbnailId *uint      `json:"-"`
@@ -25,7 +25,12 @@ func GetVideosByParentDirId(db *gorm.DB, parentDirId *uint) ([]*Video, error) {
 
 	var videos []*Video
 
-	err := db.Where("directory_id = ?", parentDirId).Preload("Thumbnail.Image").Find(&videos).Error
+	err := db.
+		Where("directory_id = ?", parentDirId).
+		Order("name").
+		Preload("Thumbnail.Image").
+		Find(&videos).
+		Error
 	if err != nil {
 		return videos, err
 	}
