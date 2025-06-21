@@ -1,4 +1,7 @@
-import './assets/main.css'
+import './assets/resetCss.css'
+import 'photoswipe/style.css'
+import 'bootstrap'
+import 'bootstrap/dist/css/bootstrap.min.css'
 
 import { createApp } from 'vue'
 import App from './App.vue'
