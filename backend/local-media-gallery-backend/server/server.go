@@ -1,6 +1,7 @@
 package server
 
 import (
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
@@ -9,6 +10,8 @@ func Init() error {
 	if err := router.SetTrustedProxies([]string{"127.0.0.0"}); err != nil {
 		return err
 	}
+
+	router.Use(cors.Default())
 
 	apiGroup := router.Group("/api")
 

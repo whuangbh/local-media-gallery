@@ -77,14 +77,14 @@ onMounted(() => {
           :data-pswp-width="img.width"
           :data-pswp-height="img.height"
           target="_blank"
-          :href="encodeResourceSrc(staticFileAddress, img.src)"
+          :href="encodeResourceSrc(staticFileAddress, img.url)"
         >
           <img
             :width="img.width"
             :height="img.height"
             loading="lazy"
             class="img-fluid border border-dark-subtle"
-            :src="encodeResourceSrc(staticFileAddress, img.src)"
+            :src="encodeResourceSrc(staticFileAddress, img.url)"
           />
         </a>
       </div>

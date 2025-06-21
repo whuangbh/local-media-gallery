@@ -6,7 +6,7 @@ const router = useRouter()
 // eslint-disable-next-line no-unused-vars
 const props = defineProps({
   folders: Array,
-  staticFileAddress: String
+  staticFileAddress: String,
 })
 
 // if the folder name is too long (e.g. manga name), only display author name
@@ -21,19 +21,21 @@ const getFolderNameToDisplay = (string) => {
     <div class="row mt-0 mb-4 gx-1 gy-4">
       <div v-for="folder in folders" :key="folder.name" class="col-6 col-xl-2 text-center">
         <button
-          @click="router.push(folder.src)"
+          @click="router.push(folder.url)"
           type="button"
           class="folderBtn btn btn-primary text-center p-0"
         >
-          <div id="folderTitle" class="py-1">{{ getFolderNameToDisplay(folder.name) }}</div>
+          <div id="folderTitle" class="py-1">
+            {{ getFolderNameToDisplay(folder.name) }}
+          </div>
           <img
-            v-if="'thumbnail' in folder"
+            v-if="folder.thumbnail != null"
             :width="folder.thumbnail.width"
             :height="folder.thumbnail.height"
             alt=""
             loading="lazy"
             class="mt-1 pb-1 img-fluid"
-            :src="encodeResourceSrc(staticFileAddress, folder.thumbnail.src)"
+            :src="encodeResourceSrc(staticFileAddress, folder.thumbnail.image.url)"
           />
         </button>
       </div>
@@ -45,6 +47,7 @@ const getFolderNameToDisplay = (string) => {
 button.folderBtn {
   width: 100%;
 }
+
 div#folderTitle {
   word-wrap: break-word;
 }

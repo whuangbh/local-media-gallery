@@ -25,7 +25,12 @@ func GetImagesByParentDirId(db *gorm.DB, parentDirId *uint) ([]*Image, error) {
 
 	var images []*Image
 
-	err := db.Where("directory_id = ?", parentDirId).Find(&images).Error
+	thumbnailImageIDsQuery := db.Table("thumbnails").Select("image_id")
+
+	err := db.
+		Where("directory_id = ?", parentDirId).
+		Not("id IN (?)", thumbnailImageIDsQuery).
+		Find(&images).Error
 	if err != nil {
 		return images, err
 	}

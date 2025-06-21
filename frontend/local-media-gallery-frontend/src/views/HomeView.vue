@@ -22,15 +22,16 @@
             Img
           </router-link>
         </div>
-        <div class="text-center">
-          <router-link
-            to="/favorite"
-            type="button"
-            class="btn btn-primary btn-lg d-inline-block mb-2 mx-auto"
-          >
-            Favorites
-          </router-link>
-        </div>
+        <!--  TODO      -->
+        <!--        <div class="text-center">-->
+        <!--          <router-link-->
+        <!--            to="/favorite"-->
+        <!--            type="button"-->
+        <!--            class="btn btn-primary btn-lg d-inline-block mb-2 mx-auto"-->
+        <!--          >-->
+        <!--            Favorites-->
+        <!--          </router-link>-->
+        <!--        </div>-->
       </div>
     </div>
   </div>
@@ -41,6 +42,7 @@ div#full-screen {
   width: 100vw;
   height: 100vh;
 }
+
 a {
   display: inline-block;
   text-decoration: none;

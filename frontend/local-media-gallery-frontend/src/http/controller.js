@@ -10,8 +10,8 @@ const backend = axios.create({
 
 const controller = {
   fetchFolderInfo: async function (url) {
-    const response = await backend.post('/api/folderInfo', {
-      folderName: decodeURI(url),
+    const response = await backend.post('/api/media-folder-info', {
+      url: decodeURI(url),
     })
     return response.data
   },

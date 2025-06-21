@@ -3,7 +3,7 @@ import { encodeResourceSrc } from '../utils/utilities'
 // eslint-disable-next-line no-unused-vars
 const props = defineProps({
   mp4s: Array,
-  staticFileAddress: String
+  staticFileAddress: String,
 })
 
 const redirectMp4Src = (url) => {
@@ -16,7 +16,7 @@ const redirectMp4Src = (url) => {
     <div class="row gx-1 gy-3">
       <div v-for="mp4 in mp4s" :key="mp4.name" class="col-xl-2 col-6 text-center">
         <button
-          @click="redirectMp4Src(encodeResourceSrc(staticFileAddress, mp4.src))"
+          @click="redirectMp4Src(encodeResourceSrc(staticFileAddress, mp4.url))"
           type="button"
           class="mp4Btn btn btn-primary p-0"
         >
@@ -30,7 +30,7 @@ const redirectMp4Src = (url) => {
             alt=""
             loading="lazy"
             class="mt-1 pb-1 img-fluid"
-            :src="encodeResourceSrc(staticFileAddress, mp4.thumbnail.src)"
+            :src="encodeResourceSrc(staticFileAddress, mp4.thumbnail.image.url)"
           />
         </button>
       </div>
