@@ -1,7 +1,9 @@
 package scripts
 
 import (
+	"errors"
 	"fmt"
+	"github.com/go-sql-driver/mysql"
 	"gorm.io/gorm/clause"
 	"local-media-gallery/database"
 	"local-media-gallery/models"
@@ -32,10 +34,15 @@ func (t *Task) Execute() error {
 		Url:  RemovePathPrefix(currentDirFullPath),
 	}
 
-	err = database.DB.Where(models.Directory{
-		Name: filepath.Base(currentDirFullPath),
-	}).FirstOrCreate(currentDirectory).Error
+	err = database.DB.Where("path = ?", currentDirFullPath).FirstOrCreate(currentDirectory).Error
 	if err != nil {
+		var mysqlErr *mysql.MySQLError
+		if errors.As(err, &mysqlErr) {
+			if mysqlErr.Number == 1062 {
+				log.Printf("Warning: Duplicate entry for directory path '%s'. It likely already exists. Error: %v\n", currentDirFullPath, err)
+				return nil
+			}
+		}
 		return fmt.Errorf("error FirstOrCreate current directory %s: %w", currentDirFullPath, err)
 	}
 
