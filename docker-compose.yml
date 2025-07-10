@@ -1,0 +1,58 @@
+services:
+  database:
+    image: mysql:9.3
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+    volumes:
+      - db_data:/var/lib/mysql
+    #    ports:
+    #      - "3306:3306"
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-u$$MYSQL_USER", "-p$$MYSQL_ROOT_PASSWORD" ]
+      interval: 3s
+      timeout: 2s
+      retries: 10
+    networks:
+      - web-network
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    environment:
+      MYSQL_HOST: database
+      MYSQL_PORT: ${MYSQL_PORT}
+      MYSQL_USER: root
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      APP_MODE: ${APP_MODE}
+      GIN_MODE: release
+    volumes:
+      - "${MEDIA_HOST_PATH}:/static_data:ro"
+    depends_on:
+      database:
+        condition: service_healthy
+    networks:
+      - web-network
+
+  nginx:
+    build:
+      context: .
+      dockerfile: nginx/Dockerfile
+    ports:
+      - "80:80"
+    volumes:
+      - "${MEDIA_HOST_PATH}:/static_data:ro"
+    depends_on:
+      backend:
+        condition: service_started
+    networks:
+      - web-network
+
+networks:
+  web-network:
+    driver: bridge
+
+volumes:
+  db_data:
