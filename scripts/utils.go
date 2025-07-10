@@ -5,10 +5,13 @@ import (
 	"fmt"
 	"image"
 	"io/fs"
+	"local-media-gallery/config"
 	"os"
 	"path/filepath"
 	"strings"
 )
+
+var prefix = os.Getenv("MEDIA_HOST_PATH")
 
 func GetImageDimensions(imagePath string) (int, int, error) {
 	file, err := os.Open(imagePath)
@@ -46,14 +49,12 @@ func GetFileExtInLowercase(entry os.DirEntry) string {
 }
 
 func GetStaticResourceUrl(fullPath string) string {
-	// TODO
 	return "/static" + RemovePathPrefix(fullPath)
 }
 
 func RemovePathPrefix(fullPath string) string {
-	prefix := "/static_data"
-
-	processedStr := strings.Replace(fullPath, prefix, "", 1)
+	processedStr := strings.Replace(fullPath, config.Config.MEDIA_HOST_PATH, "", 1)
+	processedStr = strings.Replace(processedStr, "\\", "/", -1)
 	if len(processedStr) == 0 {
 		return "/"
 	} else {

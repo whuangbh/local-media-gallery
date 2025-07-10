@@ -1,6 +1,7 @@
 package scripts
 
 import (
+	"local-media-gallery/config"
 	"local-media-gallery/database"
 	"log"
 )
@@ -17,13 +18,13 @@ func PreprocessMediaFolder() {
 	}
 
 	rootDirectories := []string{
-		"/static_data",
+		config.Config.MEDIA_HOST_PATH,
 	}
 
 	// List all the subdirectories
 	directoriesToProcess, err := GetAllSubdirectories(rootDirectories)
 	if err != nil {
-		log.Fatalf("error trying to get all subdirectories: \n %v \n", err)
+		log.Fatalf("error trying to get all subdirectories: \n %v \n %v \n", err, err.Error())
 	}
 
 	// Wrap the directories into tasks
@@ -36,7 +37,7 @@ func PreprocessMediaFolder() {
 
 	wp := WorkerPool{
 		Tasks:             tasks,
-		ConcurrencyDegree: 4,
+		ConcurrencyDegree: 8,
 	}
 
 	wp.Run()

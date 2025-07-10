@@ -3,12 +3,13 @@ package database
 import (
 	"database/sql"
 	"fmt"
-	"gorm.io/driver/mysql"
-	"gorm.io/gorm"
+	"local-media-gallery/config"
 	"local-media-gallery/models"
 	"log"
-	"os"
 	"time"
+
+	"gorm.io/driver/mysql"
+	"gorm.io/gorm"
 )
 
 var DB *gorm.DB
@@ -27,18 +28,18 @@ func InIt() error {
 
 	DB, err = connectDatabase()
 	if err != nil {
-		return fmt.Errorf("error connecting to database: \n %v \n", err)
+		return fmt.Errorf("error connecting to database: \n %v", err)
 	}
 
 	return nil
 }
 
 func connectDatabase() (*gorm.DB, error) {
-	dbUsername := "root"
-	dbPassword := os.Getenv("MYSQL_PASSWORD")
-	dbName := os.Getenv("MYSQL_DATABASE")
-	dbHost := os.Getenv("MYSQL_HOST")
-	dbPort := os.Getenv("MYSQL_PORT")
+	dbUsername := config.Config.MYSQL_USERNAME
+	dbPassword := config.Config.MYSQL_PASSWORD
+	dbName := config.Config.MYSQL_DATABASE
+	dbHost := config.Config.MYSQL_HOST
+	dbPort := config.Config.MYSQL_PORT
 
 	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local", dbUsername, dbPassword, dbHost, dbPort, dbName)
 
@@ -46,12 +47,12 @@ func connectDatabase() (*gorm.DB, error) {
 		//Logger: logger.Default.LogMode(logger.Info),
 	})
 	if err != nil {
-		return nil, fmt.Errorf("error connecting to database: \n %v \n", err)
+		return nil, fmt.Errorf("error connecting to database: \n %v", err)
 	}
 
 	sqlDB, err = database.DB()
 	if err != nil {
-		return nil, fmt.Errorf("error getting sqlDB: \n %v \n", err)
+		return nil, fmt.Errorf("error getting sqlDB: \n %v", err)
 	}
 
 	maxIdleConns := 10

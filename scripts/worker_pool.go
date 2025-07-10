@@ -3,14 +3,15 @@ package scripts
 import (
 	"errors"
 	"fmt"
-	"github.com/go-sql-driver/mysql"
-	"gorm.io/gorm/clause"
 	"local-media-gallery/database"
 	"local-media-gallery/models"
 	"log"
 	"os"
 	"path/filepath"
 	"sync"
+
+	"github.com/go-sql-driver/mysql"
+	"gorm.io/gorm/clause"
 )
 
 type Task struct {
@@ -40,7 +41,7 @@ func (t *Task) Execute() error {
 		if errors.As(err, &mysqlErr) {
 			if mysqlErr.Number == 1062 {
 				log.Printf("Warning: Duplicate entry for directory path '%s'. It likely already exists. Error: %v\n", currentDirFullPath, err)
-				return nil
+				// return nil
 			}
 		}
 		return fmt.Errorf("error FirstOrCreate current directory %s: %w", currentDirFullPath, err)
