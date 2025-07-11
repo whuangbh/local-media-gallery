@@ -11,7 +11,6 @@ import (
 	"sync"
 
 	"github.com/go-sql-driver/mysql"
-	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 )
 
@@ -36,8 +35,10 @@ func (t *Task) Execute() error {
 		Url:  RemovePathPrefix(currentDirFullPath),
 	}
 
-	result := database.DB.Where("path = ?", currentDirFullPath).First(currentDirectory)
-	if result.Error != nil && errors.Is(result.Error, gorm.ErrRecordNotFound) {
+	result := database.DB.Where("path = ?", currentDirFullPath).Limit(1).Find(currentDirectory)
+	if result.Error != nil {
+		return fmt.Errorf("error finding current directory %s: %w", currentDirFullPath, result.Error)
+	} else if result.RowsAffected == 0 {
 		result = database.DB.Create(currentDirectory)
 		var mysqlErr *mysql.MySQLError
 		if result.Error != nil && errors.As(result.Error, &mysqlErr) && mysqlErr.Number == 1062 {
@@ -46,11 +47,11 @@ func (t *Task) Execute() error {
 		} else if result.Error != nil {
 			return fmt.Errorf("error creating current directory %s: %w", currentDirFullPath, result.Error)
 		}
-	} else if result.Error != nil {
-		return fmt.Errorf("error finding current directory %s: %w", currentDirFullPath, result.Error)
 	}
 
 	if currentDirectory.Id == 0 {
+		fmt.Println(result.Error)
+		fmt.Println(result.RowsAffected)
 		return fmt.Errorf("directory ID is 0 after processing for path '%s'", currentDirFullPath)
 	}
 
