@@ -11,6 +11,7 @@ import (
 	"sync"
 
 	"github.com/go-sql-driver/mysql"
+	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 )
 
@@ -35,16 +36,22 @@ func (t *Task) Execute() error {
 		Url:  RemovePathPrefix(currentDirFullPath),
 	}
 
-	err = database.DB.Where("path = ?", currentDirFullPath).FirstOrCreate(currentDirectory).Error
-	if err != nil {
+	result := database.DB.Where("path = ?", currentDirFullPath).First(currentDirectory)
+	if result.Error != nil && errors.Is(result.Error, gorm.ErrRecordNotFound) {
+		result = database.DB.Create(currentDirectory)
 		var mysqlErr *mysql.MySQLError
-		if errors.As(err, &mysqlErr) {
-			if mysqlErr.Number == 1062 {
-				log.Printf("Warning: Duplicate entry for directory path '%s'. It likely already exists. Error: %v\n", currentDirFullPath, err)
-				// return nil
-			}
+		if result.Error != nil && errors.As(result.Error, &mysqlErr) && mysqlErr.Number == 1062 {
+			log.Printf("found duplicate entry for directory '%s' when trying to creating, will try fetching it...\n", currentDirFullPath)
+			database.DB.Where("path = ?", currentDirFullPath).First(currentDirectory)
+		} else if result.Error != nil {
+			return fmt.Errorf("error creating current directory %s: %w", currentDirFullPath, result.Error)
 		}
-		return fmt.Errorf("error FirstOrCreate current directory %s: %w", currentDirFullPath, err)
+	} else if result.Error != nil {
+		return fmt.Errorf("error finding current directory %s: %w", currentDirFullPath, result.Error)
+	}
+
+	if currentDirectory.Id == 0 {
+		return fmt.Errorf("directory ID is 0 after processing for path '%s'", currentDirFullPath)
 	}
 
 	// Categorize Child Entries
