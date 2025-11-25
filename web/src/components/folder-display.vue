@@ -29,7 +29,7 @@ const getFolderNameToDisplay = (string) => {
             {{ getFolderNameToDisplay(folder.name) }}
           </div>
           <img
-            v-if="folder.thumbnail != null"
+            v-if="folder.thumbnail"
             :width="folder.thumbnail.width"
             :height="folder.thumbnail.height"
             alt=""

@@ -24,7 +24,7 @@ const redirectMp4Src = (url) => {
             {{ mp4.name.length > 10 ? mp4.name.substring(0, 8) + '...' : mp4.name }}
           </div>
           <img
-            v-if="'thumbnail' in mp4"
+            v-if="mp4.thumbnail"
             :width="mp4.thumbnail.width"
             :height="mp4.thumbnail.height"
             alt=""
