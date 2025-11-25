@@ -60,7 +60,7 @@ func printIpAddress() {
 		// and skip it if it is.
 		if ipnet, ok := addr.(*net.IPNet); ok && !ipnet.IP.IsLoopback() {
 			// Check if it's an IPv4 or IPv6 unicast address
-			if ipnet.IP.To4() != nil {
+			if ipnet.IP.To4() != nil && ipnet.IP.To4()[0] == 192 {
 				fmt.Println("Local IP:", ipnet.IP.String())
 			}
 		}

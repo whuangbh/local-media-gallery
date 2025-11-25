@@ -35,25 +35,26 @@ func main() {
 		log.Fatalf("error getting user input: %v", err)
 	}
 
-	switch input {
-	case "1":
-		log.Println("Start hosting web server...")
-		if err := server.Init(); err != nil {
-			log.Fatalf("error trying to start web server: \n %v \n", err)
-		}
-	case "2":
-		log.Println("Start preprocessing media folders...")
-		scripts.PreprocessMediaFolder()
-	default:
+	if input != "1" && input != "2" {
 		fmt.Println("Please enter 1 or 2!")
 		return
+	}
+
+	if input == "2" {
+		log.Println("Start preprocessing media folders...")
+		scripts.PreprocessMediaFolder()
+	}
+
+	log.Println("Start hosting web server...")
+	if err := server.Init(); err != nil {
+		log.Fatalf("error trying to start web server: \n %v \n", err)
 	}
 }
 
 func handleInput() (string, error) {
 	fmt.Println("What do you want to do?")
 	fmt.Println("1: Start web server")
-	fmt.Println("2: Preprocess media folders")
+	fmt.Println("2: Preprocess media folders, and start web server")
 	reader := bufio.NewReader(os.Stdin)
 
 	input, err := reader.ReadString('\n')
