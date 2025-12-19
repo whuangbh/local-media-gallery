@@ -107,6 +107,8 @@ I recommend taking a look into the "Detailed Example" directory inside the "exam
 
 2. It's very inefficient to dynamically extract thumbnails for folders and videos. Therefore this project only support setting thumbnails in a static way. Be reminded that the thumbnails for folders and videos have to be placed under the same directory and have the same name. For example, a folder named "Folder A" will have a thumbnail named "Folder A.jpg" in the same directory.
 
+3. If you use a directory from an external storage device, be aware that Windows may perform anti-malware scan on the directory on every preprocessing (It may depends on whether or not you unplug the external device before, I'm not sure). The scan can tremendously increase the time taken for the preprocess operation. You can avoid such situation by adding the directory as an exclusion to Windows's scan, but please do it at your own cost. 
+
 ## 📅 TODO
 1. Add support to 'favourites'
 
