@@ -115,6 +115,6 @@ I recommend taking a look into the "Detailed Example" directory inside the "exam
 ## 🧠 Random Thoughts
 I originally developed this project without using docker, and I used it daily without docker. I added docker because I want others can quickly try out the project without dealing with the environment. If you encounter any problems when using the project with docker, I am sorry. Leave an issue and I'll see what can I do.
 
-I used it daily with a directory on my external SSD. The project allows me to carry my media files(SSD) everywhere (traveling/aboard) while still being able to browse it's content in LAN.
+I used it daily with a huge directory (around 450 GB) on my external SSD. The project allows me to carry huge amount of personal media files everywhere (traveling/aboard) while being able to easily browse it's content in LAN. Even if the network environment is not ideal, the browsing is fast as it all happens within LAN.
 
 
