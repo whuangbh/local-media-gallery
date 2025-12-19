@@ -8,11 +8,6 @@ const props = defineProps({
   folders: Array,
   staticFileAddress: String,
 })
-
-// if the folder name is too long (e.g. manga name), only display author name
-const getFolderNameToDisplay = (string) => {
-  return string.length >= 20 ? string.split('-')[0] : string
-}
 </script>
 
 <!--  -->
@@ -23,10 +18,10 @@ const getFolderNameToDisplay = (string) => {
         <button
           @click="router.push(folder.url)"
           type="button"
-          class="folderBtn btn btn-primary text-center p-0"
+          class="btn-width btn btn-primary p-0"
         >
-          <div id="folderTitle" class="py-1">
-            {{ getFolderNameToDisplay(folder.name) }}
+          <div class="py-1 truncate mx-auto">
+            {{ folder.name }}
           </div>
           <img
             v-if="folder.thumbnail"
@@ -43,12 +38,4 @@ const getFolderNameToDisplay = (string) => {
   </div>
 </template>
 
-<style scoped>
-button.folderBtn {
-  width: 100%;
-}
-
-div#folderTitle {
-  word-wrap: break-word;
-}
-</style>
+<style scoped></style>

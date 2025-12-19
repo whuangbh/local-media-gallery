@@ -18,10 +18,10 @@ const redirectMp4Src = (url) => {
         <button
           @click="redirectMp4Src(encodeResourceSrc(staticFileAddress, mp4.url))"
           type="button"
-          class="mp4Btn btn btn-primary p-0"
+          class="btn-width btn btn-secondary p-0"
         >
-          <div class="py-1">
-            {{ mp4.name.length > 10 ? mp4.name.substring(0, 8) + '...' : mp4.name }}
+          <div class="py-1 truncate mx-auto">
+            {{ mp4.name }}
           </div>
           <img
             v-if="mp4.thumbnail"
@@ -38,8 +38,4 @@ const redirectMp4Src = (url) => {
   </div>
 </template>
 
-<style scoped>
-button.mp4Btn {
-  width: 97.5%;
-}
-</style>
+<style scoped></style>

@@ -41,18 +41,29 @@ func connectDatabase() (*gorm.DB, error) {
 	dbHost := config.Config.MYSQL_HOST
 	dbPort := config.Config.MYSQL_PORT
 
+	address := fmt.Sprintf("%s:%s@tcp(%s:%s)/", dbUsername, dbPassword, dbHost, dbPort)
+	server, err := gorm.Open(mysql.Open(address), &gorm.Config{})
+	if err != nil {
+		return nil, fmt.Errorf("could not connect to mysql server: %v", err)
+	}
+
+	server.Exec(fmt.Sprintf("CREATE DATABASE IF NOT EXISTS `%s`", dbName))
+
+	tempDB, _ := server.DB()
+	tempDB.Close()
+
 	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local", dbUsername, dbPassword, dbHost, dbPort, dbName)
 
 	database, err := gorm.Open(mysql.Open(dsn), &gorm.Config{
 		//Logger: logger.Default.LogMode(logger.Info),
 	})
 	if err != nil {
-		return nil, fmt.Errorf("error connecting to database: \n %v", err)
+		return nil, fmt.Errorf("error connecting to database: %v", err)
 	}
 
 	sqlDB, err = database.DB()
 	if err != nil {
-		return nil, fmt.Errorf("error getting sqlDB: \n %v", err)
+		return nil, fmt.Errorf("error getting sqlDB: %v", err)
 	}
 
 	maxIdleConns := 10

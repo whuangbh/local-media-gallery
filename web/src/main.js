@@ -1,3 +1,4 @@
+import './assets/main.css'
 import './assets/resetCss.css'
 import 'photoswipe/style.css'
 import 'bootstrap'
