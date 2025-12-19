@@ -1,0 +1,32 @@
+services:
+  db:
+    image: mysql:8.0.44-debian
+    container_name: local-media-gallery-mysql
+    restart: always
+    environment:
+      MYSQL_DATABASE: local-media-gallery
+      MYSQL_ROOT_PASSWORD: 123456
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+
+  app:
+    build: .
+    container_name: local-media-gallery-server
+    stdin_open: true
+    tty: true
+    ports:
+      - "80:80"
+    depends_on:
+      - db
+    environment:
+      - DB_HOST=local-media-gallery-mysql
+      - DB_PORT=3306
+      - DB_USER=root
+      - DB_PASSWORD=123456
+      - DB_NAME=local-media-gallery
+      - MEDIA_HOST_PATH=example_directory
+
+volumes:
+  db_data:
