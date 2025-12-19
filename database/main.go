@@ -25,13 +25,20 @@ var allModels = []interface{}{
 
 func InIt() error {
 	var err error
+	maxRetries := 10
+	retryInterval := 2 * time.Second
 
-	DB, err = connectDatabase()
-	if err != nil {
-		return fmt.Errorf("error connecting to database: \n %v", err)
+	for i := 0; i < maxRetries; i++ {
+		DB, err = connectDatabase()
+		if err == nil {
+			return nil
+		}
+
+		log.Printf("Database not ready (attempt %d/%d): %v", i+1, maxRetries, err)
+		time.Sleep(retryInterval)
 	}
 
-	return nil
+	return fmt.Errorf("error connecting to database: \n %v", err)
 }
 
 func connectDatabase() (*gorm.DB, error) {

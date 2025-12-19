@@ -26,7 +26,9 @@ services:
       - DB_USER=root
       - DB_PASSWORD=123456
       - DB_NAME=local-media-gallery
-      - MEDIA_HOST_PATH=example_directory
+      - MEDIA_HOST_PATH=media
+    volumes:
+      - ./example_directory:/app/media
 
 volumes:
   db_data:
