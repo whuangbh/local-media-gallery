@@ -29,7 +29,7 @@ const props = defineProps({
             :height="folder.thumbnail.height"
             alt=""
             loading="lazy"
-            class="mt-1 pb-1 img-fluid"
+            class="rounded-bottom img-fluid"
             :src="encodeResourceSrc(staticFileAddress, folder.thumbnail.image.url)"
           />
         </button>
