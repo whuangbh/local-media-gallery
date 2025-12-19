@@ -29,7 +29,7 @@ const redirectMp4Src = (url) => {
             :height="mp4.thumbnail.height"
             alt=""
             loading="lazy"
-            class="mt-1 pb-1 img-fluid"
+            class="rounded-bottom img-fluid"
             :src="encodeResourceSrc(staticFileAddress, mp4.thumbnail.image.url)"
           />
         </button>
