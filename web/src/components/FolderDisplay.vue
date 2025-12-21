@@ -1,20 +1,24 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
 import { encodeResourceSrc } from '@/utils/utils'
+import type { Folder } from '@/types/types'
 
 const router = useRouter()
-// eslint-disable-next-line no-unused-vars
-const props = defineProps({
-  folders: Array,
-  staticFileAddress: String,
-})
+
+const props = defineProps<{
+  folders: Folder[]
+  backendAddress: string
+}>()
 </script>
 
-<!--  -->
 <template>
   <div class="container-fluid">
-    <div class="row mt-0 mb-4 gx-1 gy-4">
-      <div v-for="folder in folders" :key="folder.name" class="col-6 col-xl-2 text-center">
+    <div class="row mb-4 gx-1 gy-4">
+      <div
+        v-for="folder in folders"
+        :key="folder.name"
+        class="col-6 col-sm-4 col-md-3 col-xl-2 text-center"
+      >
         <button
           @click="router.push(folder.url)"
           type="button"
@@ -25,12 +29,11 @@ const props = defineProps({
           </div>
           <img
             v-if="folder.thumbnail"
-            :width="folder.thumbnail.width"
-            :height="folder.thumbnail.height"
-            alt=""
+            :width="folder.thumbnail.image.width"
+            :height="folder.thumbnail.image.height"
             loading="lazy"
             class="rounded-bottom img-fluid"
-            :src="encodeResourceSrc(staticFileAddress, folder.thumbnail.image.url)"
+            :src="encodeResourceSrc(backendAddress, folder.thumbnail.image.url)"
           />
         </button>
       </div>

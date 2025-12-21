@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const backend = axios.create({
-  baseURL: 'http://localhost',
+  baseURL: '',
   timeout: 5000,
   headers: {
     'Content-type': 'application/json',

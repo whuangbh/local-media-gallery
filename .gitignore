@@ -1,6 +1,6 @@
 .DS_Store
 .idea
 .vscode
-*.exe
+*.exe*
 .next
 next-env.d.ts

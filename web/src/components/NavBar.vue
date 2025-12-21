@@ -1,42 +1,42 @@
 <script setup lang="ts">
 import { useRoute, useRouter } from 'vue-router'
-import BackButtonIcon from './icons/back-button.vue'
 
 const route = useRoute()
 const router = useRouter()
 
-// eslint-disable-next-line no-unused-vars
-const props = defineProps({
-  navBarTitle: String,
-})
+const props = defineProps<{
+  navBarTitle: string
+}>()
 
 const goBackToUpperPath = () => {
-  const pathSegments = route.path.split('/')
+  const pathSegments = props.navBarTitle.split('/').filter(Boolean)
   pathSegments.pop()
-  router.push(pathSegments.length === 1 && pathSegments[0] === '' ? '/' : pathSegments.join('/'))
+  const newPath = `/${pathSegments.join('/')}`
+
+  router.push(newPath)
 }
 </script>
 
 <template>
-  <div class="container-fluid">
-    <div class="h2 mt-1 d-flex align-items-center">
+  <div class="container-fluid my-3">
+    <div class="h2 mt-1 d-flex">
       <button
         v-if="route.path !== '/'"
         type="button"
         class="btn btn-secondary d-inline me-2"
         @click="goBackToUpperPath"
       >
-        <BackButtonIcon />
+        <i className="bi bi-chevron-left me-1"></i>
       </button>
-      <span> {{ navBarTitle || 'Loading...' }} </span>
-      <button
+      <span className="align-self-center"> {{ navBarTitle || 'Loading...' }} </span>
+      <!-- <button
         v-if="route.name === 'Favorite Viewer'"
         type="button"
         class="btn btn-secondary d-inline ms-auto"
         @click="$emit('onClickSortFavBtn')"
       >
         Sort/Refresh Fav
-      </button>
+      </button> -->
     </div>
   </div>
 </template>
