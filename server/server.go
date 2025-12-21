@@ -33,14 +33,14 @@ func Init() error {
 		// TODO
 	}
 
-	router.NoRoute(func(c *gin.Context) {
-		c.File("./web/dist/index.html")
-	})
+	// router.NoRoute(func(c *gin.Context) {
+	// 	c.File("./web/dist/index.html")
+	// })
 
 	printIpAddress()
 
 	// TODO
-	if err := router.Run(":80"); err != nil {
+	if err := router.Run(":" + config.Config.BACKEND_SERVER_PORT); err != nil {
 		return err
 	}
 
@@ -60,7 +60,7 @@ func printIpAddress() {
 		if ipnet, ok := addr.(*net.IPNet); ok && !ipnet.IP.IsLoopback() {
 			// Check if it's an IPv4 or IPv6 unicast address
 			if ipnet.IP.To4() != nil && ipnet.IP.To4()[0] == 192 {
-				fmt.Printf("Local IP: %s:80 \n", ipnet.IP.String())
+				fmt.Printf("Backend Server IP: %s:%s \n", ipnet.IP.String(), config.Config.BACKEND_SERVER_PORT)
 			}
 		}
 	}
