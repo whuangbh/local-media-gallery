@@ -1,6 +1,6 @@
-<script setup>
+<script setup lang="ts">
 import { useRouter } from 'vue-router'
-import { encodeResourceSrc } from '../utils/utilities'
+import { encodeResourceSrc } from '@/utils/utils'
 
 const router = useRouter()
 // eslint-disable-next-line no-unused-vars

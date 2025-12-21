@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const backend = axios.create({
-  baseURL: '',
+  baseURL: 'http://localhost',
   timeout: 5000,
   headers: {
     'Content-type': 'application/json',
@@ -9,7 +9,7 @@ const backend = axios.create({
 })
 
 const controller = {
-  fetchFolderInfo: async function (url) {
+  fetchFolderInfo: async function (url: string) {
     const response = await backend.post('/api/media-folder-info', {
       url: decodeURI(url),
     })

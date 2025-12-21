@@ -1,72 +1,73 @@
-<script setup>
-import { onMounted } from "vue";
-import { encodeResourceSrc } from "../utils/utilities";
-import PhotoSwipeLightbox from "photoswipe/lightbox";
-import constant from "@/assets/constant.js";
+<script setup lang="ts">
+import { onMounted } from 'vue'
+import { encodeResourceSrc } from '@/utils/utils'
+import PhotoSwipeLightbox from 'photoswipe/lightbox'
+import 'photoswipe/style.css'
+import constant from '@/assets/constant.js'
 
 const props = defineProps({
   imgs: Array,
   staticFileAddress: String,
-  favorites: Array
-});
+  favorites: Array,
+})
 
-const emit = defineEmits(["addFavorite", "removeFavorite"]);
+const emit = defineEmits(['addFavorite', 'removeFavorite'])
 
 const isImgObjInFavorites = (index) => {
-  return props.favorites.some((imgObj) => imgObj.name === props.imgs.at(index).name);
-};
+  return props.favorites.some((imgObj) => imgObj.name === props.imgs.at(index).name)
+}
 
 function photoSwipeInit() {
   const lightbox = new PhotoSwipeLightbox({
-    gallery: "#my-gallery",
-    children: "a",
-    imageClickAction: "close",
-    tapAction: "close",
-    pswpModule: () => import("photoswipe")
-  });
+    gallery: '#my-gallery',
+    children: 'a',
+    imageClickAction: 'close',
+    tapAction: 'close',
+    pswpModule: () => import('photoswipe'),
+  })
 
-  lightbox.on("uiRegister", () => {
+  lightbox.on('uiRegister', () => {
     lightbox.pswp.ui.registerElement({
-      name: "fav-btn",
+      name: 'fav-btn',
       order: 9,
       isButton: true,
       html: constant.favBtnEmptyStr,
       onInit: (el, pswp) => {
-        pswp.on("change", () => {
-          const currentIndex = pswp.currSlide.index;
-          if (isImgObjInFavorites(currentIndex)) el.innerHTML = constant.favBtnFilledStr;
-          else el.innerHTML = constant.favBtnEmptyStr;
-        });
+        pswp.on('change', () => {
+          const currentIndex = pswp.currSlide.index
+          if (isImgObjInFavorites(currentIndex)) el.innerHTML = constant.favBtnFilledStr
+          else el.innerHTML = constant.favBtnEmptyStr
+        })
       },
 
       onClick: async (event, el, pswp) => {
-        const currentIndex = pswp.currSlide.index;
-        const data = props.imgs.at(currentIndex);
+        const currentIndex = pswp.currSlide.index
+        const data = props.imgs.at(currentIndex)
 
-        el.innerHTML = constant.spinnerStr;
+        el.innerHTML = constant.spinnerStr
 
         try {
           if (isImgObjInFavorites(currentIndex)) {
-            emit("removeFavorite", data, () => {
-              el.innerHTML = constant.favBtnEmptyStr;
-            });
+            emit('removeFavorite', data, () => {
+              el.innerHTML = constant.favBtnEmptyStr
+            })
           } else {
-            emit("addFavorite", data, () => {
-              el.innerHTML = constant.favBtnFilledStr;
-            });
+            emit('addFavorite', data, () => {
+              el.innerHTML = constant.favBtnFilledStr
+            })
           }
         } catch (error) {
-          console.error("Error updating favorite:", error);
+          console.error('Error updating favorite:', error)
         }
-      }
-    });
-  });
-  lightbox.init();
+      },
+    })
+  })
+  lightbox.init()
 }
 
 onMounted(() => {
-  photoSwipeInit();
-});
+  photoSwipeInit()
+})
 </script>
 
 <template>

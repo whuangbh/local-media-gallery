@@ -1,5 +1,5 @@
-<script setup>
-import { encodeResourceSrc } from '../utils/utilities'
+<script setup lang="ts">
+import { encodeResourceSrc } from '@/utils/utils'
 // eslint-disable-next-line no-unused-vars
 const props = defineProps({
   mp4s: Array,

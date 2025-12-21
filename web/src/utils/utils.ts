@@ -1,4 +1,4 @@
-function encodeResourceSrc(staticFileAddress, src) {
+function encodeResourceSrc(staticFileAddress: string, src: string) {
   return (
     staticFileAddress +
     encodeURI(src)

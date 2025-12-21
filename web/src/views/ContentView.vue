@@ -1,10 +1,10 @@
-<script setup>
+<script setup lang="ts">
 import { ref, watchEffect } from 'vue'
 import { useRoute } from 'vue-router'
-import NavBar from '../components/nav-bar.vue'
-import FolderDisplay from '../components/folder-display.vue'
-import ImgDisplay from '../components/img-display.vue'
-import Mp4Display from '../components/mp4-display.vue'
+import NavBar from '@/components/nav-bar.vue'
+import FolderDisplay from '@/components/folder-display.vue'
+import ImgDisplay from '@/components/img-display.vue'
+import Mp4Display from '@/components/mp4-display.vue'
 import controller from '@/http/controller.js'
 
 const route = useRoute()
@@ -128,7 +128,7 @@ async function fetchContentInfo() {
     </template>
     <template v-else>
       <div v-if="isFetchFavSuccess === null">Loading...</div>
-      <div v-else-if="isFetchFavSuccess === false">Fail to fetch favourites!</div>
+      <div v-else-if="isFetchFavSuccess === false">Fail to fetch favorites!</div>
       <div v-else-if="folders.length === 0 && imgs.length === 0 && vids.length === 0">
         No content in favorites!
       </div>

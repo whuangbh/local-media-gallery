@@ -8,12 +8,13 @@ import (
 )
 
 var Config struct {
-	MYSQL_USERNAME  string
-	MYSQL_PASSWORD  string
-	MYSQL_DATABASE  string
-	MYSQL_HOST      string
-	MYSQL_PORT      string
-	MEDIA_HOST_PATH string
+	BACKEND_SERVER_PORT string
+	MYSQL_USERNAME      string
+	MYSQL_PASSWORD      string
+	MYSQL_DATABASE      string
+	MYSQL_HOST          string
+	MYSQL_PORT          string
+	MEDIA_HOST_PATH     string
 }
 
 func LoadConfig() {
@@ -22,6 +23,7 @@ func LoadConfig() {
 		log.Fatalf("Error loading .env file: %v", err)
 	}
 
+	Config.BACKEND_SERVER_PORT = os.Getenv("BACKEND_SERVER_PORT")
 	Config.MYSQL_USERNAME = os.Getenv("MYSQL_USERNAME")
 	Config.MYSQL_PASSWORD = os.Getenv("MYSQL_PASSWORD")
 	Config.MYSQL_DATABASE = os.Getenv("MYSQL_DATABASE")
