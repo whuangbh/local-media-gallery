@@ -18,6 +18,15 @@ type Task struct {
 	Directory string
 }
 
+var incompatibleFiles []string
+var incompatibleMutex sync.Mutex
+
+func addIncompatibleFile(path string) {
+	incompatibleMutex.Lock()
+	defer incompatibleMutex.Unlock()
+	incompatibleFiles = append(incompatibleFiles, path)
+}
+
 func (t *Task) Execute() error {
 	currentDirFullPath := t.Directory
 
@@ -78,10 +87,11 @@ func (t *Task) Execute() error {
 			switch fileExtInLowercase {
 			case ".jpg", ".jpeg", ".png", ".gif", ".webp":
 				imagesDirEntry = append(imagesDirEntry, entry)
-			case ".mp4", ".m4v", ".mov", ".webm":
+			case ".mp4", ".m4v", ".webm":
 				videosDirEntry = append(videosDirEntry, entry)
 			default:
-				log.Printf("Unknown file extension: %s \n", fullPath)
+				log.Printf("Incompatible file extension: %s \n", fullPath)
+				addIncompatibleFile(fullPath)
 			}
 		}
 	}
@@ -217,4 +227,12 @@ func (workerPool *WorkerPool) Run() {
 	close(workerPool.tasksChan)
 
 	workerPool.waitGroup.Wait()
+
+	if len(incompatibleFiles) > 0 {
+		fmt.Println("\n--- Incompatible Files Report ---")
+		for _, path := range incompatibleFiles {
+			fmt.Printf("Excluded: %s\n", path)
+		}
+		fmt.Printf("Total excluded: %d\n", len(incompatibleFiles))
+	}
 }
