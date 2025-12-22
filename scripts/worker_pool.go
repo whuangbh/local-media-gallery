@@ -78,7 +78,7 @@ func (t *Task) Execute() error {
 			switch fileExtInLowercase {
 			case ".jpg", ".jpeg", ".png", ".gif", ".webp":
 				imagesDirEntry = append(imagesDirEntry, entry)
-			case ".mp4", ".m4v", ".mov", ".webm":
+			case ".mp4", ".m4v", ".webm":
 				videosDirEntry = append(videosDirEntry, entry)
 			default:
 				log.Printf("Unknown file extension: %s \n", fullPath)
