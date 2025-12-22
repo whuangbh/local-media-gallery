@@ -5,15 +5,17 @@ import (
 )
 
 var Config struct {
-	MYSQL_USERNAME  string
-	MYSQL_PASSWORD  string
-	MYSQL_DATABASE  string
-	MYSQL_HOST      string
-	MYSQL_PORT      string
-	MEDIA_HOST_PATH string
+	BACKEND_SERVER_PORT string
+	MYSQL_USERNAME      string
+	MYSQL_PASSWORD      string
+	MYSQL_DATABASE      string
+	MYSQL_HOST          string
+	MYSQL_PORT          string
+	MEDIA_HOST_PATH     string
 }
 
 func LoadConfig() {
+	Config.BACKEND_SERVER_PORT = os.Getenv("BACKEND_SERVER_PORT")
 	Config.MYSQL_USERNAME = os.Getenv("DB_USER")
 	Config.MYSQL_PASSWORD = os.Getenv("DB_PASSWORD")
 	Config.MYSQL_DATABASE = os.Getenv("DB_NAME")
