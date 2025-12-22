@@ -26,8 +26,7 @@ This project focuses on handling media files that can natively displayed without
 
 1. MP4
 2. M4V
-3. MOV
-4. WEBM
+3. WEBM
 
 ### 🖼️ Image
 
