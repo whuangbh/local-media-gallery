@@ -26,8 +26,7 @@ This project focuses on handling media files that can natively displayed without
 
 1. MP4
 2. M4V
-3. MOV
-4. WEBM
+3. WEBM
 
 ### 🖼️ Image
 
@@ -85,13 +84,14 @@ This is how it loks like in a mobile browser:
 
 4. If you're running the project for the first time **or** the contents of the directory have changed since last run, type `2` in the current terminal and hit enter  to preprocess/index the directory. After the preprocessing, the server will start automatically. 
 5. If it is not your first time **and** the contents of the directory haven't changed, type `1` in the current terminal and hit enter. The server will start.
-6. You can view the content of the directory using any device in your LAN. 
+6. Visit port 80 to view the content of the directory using any device in your LAN. 
 
 ## 💡 Recommendation
-If you haven't notice, the response speed of the server is not at its best when running with Docker. If you want a better experience, I would recommend installing MySQL, Go, and NodeJS onto your device and run the project locally without docker. In this way the media will load much faster in the web browser and the preprocessing will run faster without the limitation of Docker. The **windows branch** contains the localized project which I actually runs day-to-day in Windows, you can look into it if interested.
+If you haven't notice, the response speed of the server is not at its best when running with Docker. If you want a better experience or plan to use the project in the long term, I would recommend installing MySQL, Go, and NodeJS onto your device and run the project locally without docker. In this way the media will load much faster in the web browser and the preprocessing will run faster without the limitation of Docker. The **windows branch** contains the localized project which I actually runs day-to-day in Windows, you can look into it if interested.
 
 ## ⚠️ Things to Consider
 I recommend taking a look into the "Detailed Example" directory inside the "example_directory" directory.
+
 1. Be aware that the filename can affect the position of the media on the website. For example, you would usually expect an order like this:
     1. 1.jpg
     2. 2.jpg
@@ -107,7 +107,11 @@ I recommend taking a look into the "Detailed Example" directory inside the "exam
 
 2. It's very inefficient to dynamically extract thumbnails for folders and videos. Therefore this project only support setting thumbnails in a static way. Be reminded that the thumbnails for folders and videos have to be placed under the same directory and have the same name. For example, a folder named "Folder A" will have a thumbnail named "Folder A.jpg" in the same directory.
 
-3. If you use a directory from an external storage device, be aware that Windows may perform anti-malware scan on the directory on every preprocessing (It may depends on whether or not you unplug the external device before, I'm not sure). The scan can tremendously increase the time taken for the preprocess operation. You can avoid such situation by adding the directory as an exclusion to Windows's scan, but please do it at your own cost. 
+3. If you use a directory from an external storage device, be aware that Windows may perform anti-malware scan on the directory on every preprocessing (It may depends on whether or not you unplug the external device before, I'm not sure). The scan can tremendously increase the time taken for the preprocess operation. You can avoid such situation by adding the directory as an exclusion to Windows's scan, but please do it at your own cost.
+
+4. I encountered difficulties when preprocessing a directory containing a large number of sub-directories (~800). It appears that Docker struggles to support mounting volumes with this many sub-directories. Therefore, I recommend running the project locally rather than through Docker.
+
+5. When running the project in Docker, certain MP4 files fail to play in the browser and instead trigger a download dialog. I am not sure about the root cause of this behavior, but for now, I suggest a local setup to avoid these compatibility issues.
 
 ## 📅 TODO
 1. Add support to 'favourites'
