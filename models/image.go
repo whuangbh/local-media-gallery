@@ -8,7 +8,7 @@ import (
 
 type Image struct {
 	Id   uint   `json:"-" gorm:"primarykey;autoIncrement"`
-	Name string `json:"name" gorm:"not null;size:256;index:idx_member,priority:2;index:idx_name,type:FULLTEXT"`
+	Name string `json:"name" gorm:"not null;size:256;index:idx_member,priority:2"`
 	Path string `json:"-" gorm:"not null;unique;size:512"`
 	Url  string `json:"url" gorm:"not null:unique;size:512"`
 
