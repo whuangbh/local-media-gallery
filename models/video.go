@@ -2,12 +2,13 @@ package models
 
 import (
 	"fmt"
+
 	"gorm.io/gorm"
 )
 
 type Video struct {
 	Id   uint   `json:"-" gorm:"primarykey;autoIncrement"`
-	Name string `json:"name" gorm:"not null;size:256;index:idx_member,priority:2"`
+	Name string `json:"name" gorm:"not null;size:256;index:idx_member,priority:2;index:idx_name,type:FULLTEXT"`
 	Path string `json:"-" gorm:"not null;unique;size:512"`
 	Url  string `json:"url" gorm:"not null:unique;size:512"`
 
@@ -35,5 +36,22 @@ func GetVideosByParentDirId(db *gorm.DB, parentDirId *uint) ([]*Video, error) {
 		return videos, err
 	}
 
+	return videos, nil
+}
+
+func SearchVideosByName(db *gorm.DB, query string) ([]*Video, error) {
+	var videos []*Video
+	searchPattern := "%" + query + "%"
+
+	err := db.
+		Where("name LIKE ?", searchPattern).
+		Order("name").
+		Preload("Thumbnail.Image").
+		Find(&videos).
+		Error
+
+	if err != nil {
+		return nil, err
+	}
 	return videos, nil
 }

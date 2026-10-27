@@ -1,7 +1,7 @@
 import axios from 'axios'
 
-const backend = axios.create({
-  baseURL: '',
+export const backend = axios.create({
+  baseURL: window.location.origin,
   timeout: 5000,
   headers: {
     'Content-type': 'application/json',
@@ -12,6 +12,13 @@ const controller = {
   fetchFolderInfo: async function (url: string) {
     const response = await backend.post('/api/media-folder-info', {
       url: decodeURI(url),
+    })
+    return response.data
+  },
+
+  fetchSearchResults: async function (query: string) {
+    const response = await backend.post('/api/search-media', {
+      query: query,
     })
     return response.data
   },

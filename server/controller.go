@@ -1,8 +1,9 @@
 package server
 
 import (
-	"github.com/gin-gonic/gin"
 	"net/http"
+
+	"github.com/gin-gonic/gin"
 )
 
 type MediaFolderInfoRequest struct {
@@ -35,5 +36,37 @@ func GetMediaFolderInfo(c *gin.Context) {
 		"directories": directories,
 		"videos":      videos,
 		"images":      images,
+	})
+}
+
+type SearchMediaRequest struct {
+	Query string `json:"query" binding:"required"`
+}
+
+func SearchMedia(c *gin.Context) {
+	var req SearchMediaRequest
+
+	err := c.ShouldBindJSON(&req)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"success": false,
+			"error":   err.Error(),
+		})
+		return
+	}
+
+	videos, images, err := SearchMediaByKeyword(req.Query)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"success": false,
+			"error":   err.Error(),
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"success": true,
+		"videos":  videos,
+		"images":  images,
 	})
 }

@@ -33,6 +33,11 @@ func Init() error {
 		// TODO
 	}
 
+	// Search Media
+	{
+		apiGroup.POST("/search-media", SearchMedia)
+	}
+
 	router.NoRoute(func(c *gin.Context) {
 		c.File("./web/dist/index.html")
 	})

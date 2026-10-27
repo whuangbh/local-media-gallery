@@ -31,3 +31,22 @@ func QueryFolderInfo(parentDirectoryUrl string) (
 
 	return parentDirectory, directories, videos, images, nil
 }
+
+func SearchMediaByKeyword(query string) (
+	[]*models.Video,
+	[]*models.Image,
+	error,
+) {
+
+	videos, err := models.SearchVideosByName(database.DB, query)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	images, err := models.SearchImagesByName(database.DB, query)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	return videos, images, nil
+}

@@ -9,6 +9,13 @@ const props = defineProps<{
 }>()
 
 const goBackToUpperPath = () => {
+  // If we are currently on the search page, always go straight back to root
+  if (route.name === 'Search') {
+    router.push('/')
+    return
+  }
+
+  // Otherwise, use existing folder-splitting logic
   const pathSegments = props.navBarTitle.split('/').filter(Boolean)
   pathSegments.pop()
   const newPath = `/${pathSegments.join('/')}`
@@ -37,6 +44,13 @@ const goBackToUpperPath = () => {
       >
         Sort/Refresh Fav
       </button> -->
+      <router-link
+        v-if="route.path === '/'"
+        to="/search"
+        type="button"
+        class="btn btn-secondary d-inline ms-auto"
+        >Search
+      </router-link>
     </div>
   </div>
 </template>

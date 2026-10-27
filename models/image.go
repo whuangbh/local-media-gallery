@@ -2,12 +2,13 @@ package models
 
 import (
 	"fmt"
+
 	"gorm.io/gorm"
 )
 
 type Image struct {
 	Id   uint   `json:"-" gorm:"primarykey;autoIncrement"`
-	Name string `json:"-" gorm:"not null;size:256;index:idx_member,priority:2"`
+	Name string `json:"name" gorm:"not null;size:256;index:idx_member,priority:2;index:idx_name,type:FULLTEXT"`
 	Path string `json:"-" gorm:"not null;unique;size:512"`
 	Url  string `json:"url" gorm:"not null:unique;size:512"`
 
@@ -37,5 +38,21 @@ func GetImagesByParentDirId(db *gorm.DB, parentDirId *uint) ([]*Image, error) {
 		return images, err
 	}
 
+	return images, nil
+}
+
+func SearchImagesByName(db *gorm.DB, query string) ([]*Image, error) {
+	var images []*Image
+	searchPattern := "%" + query + "%"
+
+	err := db.
+		Where("name LIKE ?", searchPattern).
+		Order("name").
+		Find(&images).
+		Error
+
+	if err != nil {
+		return nil, err
+	}
 	return images, nil
 }

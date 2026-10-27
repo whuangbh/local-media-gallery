@@ -5,11 +5,11 @@ import NavBar from '@/components/NavBar.vue'
 import FolderDisplay from '@/components/FolderDisplay.vue'
 import ImgDisplay from '@/components/ImgDisplay.vue'
 import Mp4Display from '@/components/Mp4Display.vue'
-import Controller from '@/http/controller.js'
+import Controller, { backend } from '@/http/controller.js'
 import type { Folder, Video, Image, FolderContentResponse } from '@/types/types'
 
 const route = useRoute()
-const backendAddress = window.location.origin
+const backendAddress = backend.defaults.baseURL!
 
 const navBarTitle = ref<string>('')
 const isFetchSuccess = ref<boolean | null>(null)

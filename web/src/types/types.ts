@@ -17,7 +17,25 @@ interface FolderContentError {
   videos?: never
 }
 
+export type SearchResultsResponse = SearchResultsSuccess | SearchResultsError
+
+interface SearchResultsSuccess {
+  success: true
+  images: Image[]
+  videos: Video[]
+  error?: never
+}
+
+interface SearchResultsError {
+  success: false
+  error: string
+  directories?: never
+  images?: never
+  videos?: never
+}
+
 export interface Image {
+  name: string
   url: string
   width: number
   height: number
