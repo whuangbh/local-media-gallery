@@ -8,6 +8,7 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"strings"
 	"sync"
 
 	"github.com/go-sql-driver/mysql"
@@ -72,7 +73,7 @@ func (t *Task) Execute() error {
 	// Process each subdirectory, image, and video in the Directory
 	for _, entry := range entries {
 		// Skip over hidden files
-		if entry.Name()[0] == '.' {
+		if strings.HasPrefix(entry.Name(), ".") {
 			continue
 		}
 
@@ -87,7 +88,7 @@ func (t *Task) Execute() error {
 			switch fileExtInLowercase {
 			case ".jpg", ".jpeg", ".png", ".gif", ".webp":
 				imagesDirEntry = append(imagesDirEntry, entry)
-			case ".mp4", ".m4v", ".webm":
+			case ".mp4", ".m4v", ".webm", ".mov":
 				videosDirEntry = append(videosDirEntry, entry)
 			default:
 				log.Printf("Incompatible file extension: %s \n", fullPath)
@@ -122,7 +123,7 @@ func (t *Task) Execute() error {
 		videosMap[baseName] = &models.Video{
 			Name:        name,
 			Path:        fullPath,
-			Url:         GetStaticResourceUrl(fullPath),
+			Url:         GetRelativeUrl(fullPath),
 			DirectoryId: currentDirectory.Id,
 		}
 	}
@@ -143,7 +144,7 @@ func (t *Task) Execute() error {
 		i := models.Image{
 			Name:        name,
 			Path:        fullPath,
-			Url:         GetStaticResourceUrl(fullPath),
+			Url:         GetRelativeUrl(fullPath),
 			Width:       width,
 			Height:      height,
 			DirectoryId: currentDirectory.Id,

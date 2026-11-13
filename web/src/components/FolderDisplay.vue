@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
-import { encodeResourceSrc } from '@/utils/utils'
+import { getThumbnailUrl } from '@/utils/utils'
 import type { Folder } from '@/types/types'
 
 const router = useRouter()
@@ -33,7 +33,7 @@ const props = defineProps<{
             :height="folder.thumbnail.image.height"
             loading="lazy"
             class="rounded-bottom img-fluid"
-            :src="encodeResourceSrc(backendAddress, folder.thumbnail.image.url)"
+            :src="getThumbnailUrl(backendAddress, folder.thumbnail.image.url)"
           />
         </button>
       </div>

@@ -48,8 +48,8 @@ func GetFileExtInLowercase(entry os.DirEntry) string {
 	return strings.ToLower(filepath.Ext(entry.Name()))
 }
 
-func GetStaticResourceUrl(fullPath string) string {
-	return "/static" + RemovePathPrefix(fullPath)
+func GetRelativeUrl(fullPath string) string {
+	return RemovePathPrefix(fullPath)
 }
 
 func RemovePathPrefix(fullPath string) string {
@@ -72,6 +72,9 @@ func GetAllSubdirectories(roots []string) ([]string, error) {
 			}
 
 			if file.IsDir() {
+				if strings.HasPrefix(file.Name(), ".") && path != root {
+					return filepath.SkipDir
+				}
 				result = append(result, path)
 			}
 

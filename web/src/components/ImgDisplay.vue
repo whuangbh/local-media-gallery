@@ -1,9 +1,8 @@
 <script setup lang="ts">
-import { onMounted } from 'vue'
-import { encodeResourceSrc } from '@/utils/utils'
+import { onMounted, onUnmounted } from 'vue'
+import { getStaticUrl, getThumbnailUrl } from '@/utils/utils'
 import PhotoSwipeLightbox from 'photoswipe/lightbox'
 import 'photoswipe/style.css'
-import constant from '@/assets/constant.js'
 import type { Image } from '@/types/types'
 
 const props = defineProps<{
@@ -14,11 +13,45 @@ const props = defineProps<{
 
 const galleryElementId = 'photo-swipe-gallery'
 
-// const emit = defineEmits(['addFavorite', 'removeFavorite'])
+// 停靠观察器：远离视口 >3 屏 → 释放解码内存；回到附近 → 恢复
+const parkObserver = new IntersectionObserver(
+  (entries) => {
+    for (const entry of entries) {
+      const img = entry.target as HTMLImageElement
+      if (!entry.isIntersecting) {
+        // 远离视口：停靠
+        if (img.src && !img.dataset.parkedSrc) {
+          img.dataset.parkedSrc = img.src
+          img.removeAttribute('src')
+        }
+      } else {
+        // 回到视口附近：恢复
+        if (!img.src && img.dataset.parkedSrc) {
+          img.src = img.dataset.parkedSrc
+          delete img.dataset.parkedSrc
+        }
+      }
+    }
+  },
+  { rootMargin: '300% 0px 300% 0px' }, // 视口上下各 3 屏的缓冲带
+)
 
-// const isImgObjInFavorites = (index) => {
-//   return props.favorites.some((imgObj) => imgObj.name === props.imgs.at(index).name)
-// }
+// 加载观察器：进入视口前 300px 开始加载
+const loadObserver = new IntersectionObserver(
+  (entries) => {
+    for (const entry of entries) {
+      if (!entry.isIntersecting) continue
+      const img = entry.target as HTMLImageElement
+      const src = img.dataset.src
+      if (src) {
+        img.src = src
+        img.removeAttribute('data-src')
+      }
+      loadObserver.unobserve(img) // 加载后不再观察
+    }
+  },
+  { rootMargin: '300px 0px', threshold: 0.01 },
+)
 
 function photoSwipeInit() {
   const lightbox = new PhotoSwipeLightbox({
@@ -68,7 +101,20 @@ function photoSwipeInit() {
 }
 
 onMounted(() => {
+  const gallery = document.getElementById(galleryElementId)
+  if (gallery) {
+    const imgs = gallery.querySelectorAll<HTMLImageElement>('img[data-src]')
+    imgs.forEach((img) => {
+      loadObserver.observe(img)
+      parkObserver.observe(img)
+    })
+  }
   photoSwipeInit()
+})
+
+onUnmounted(() => {
+  loadObserver.disconnect()
+  parkObserver.disconnect()
 })
 </script>
 
@@ -80,14 +126,13 @@ onMounted(() => {
           :data-pswp-width="img.width"
           :data-pswp-height="img.height"
           target="_blank"
-          :href="encodeResourceSrc(backendAddress, img.url)"
+          :href="getStaticUrl(props.backendAddress, img.url)"
         >
           <img
             :width="img.width"
             :height="img.height"
-            loading="lazy"
             class="img-fluid border border-dark-subtle"
-            :src="encodeResourceSrc(backendAddress, img.url)"
+            :data-src="getThumbnailUrl(props.backendAddress, img.url)"
           />
         </a>
       </div>
